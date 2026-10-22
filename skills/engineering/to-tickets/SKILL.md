@@ -1,6 +1,6 @@
 ---
 name: to-tickets
-description: Break a plan, spec, or the current conversation into a set of tracer-bullet tickets, each declaring its blocking edges, published to the configured tracker (edges as text in one file per ticket locally, or native blocking links on a real tracker).
+description: "Break a plan, spec, or the current conversation into tracer-bullet tickets with native blocking links on GitHub or relative links in local files."
 disable-model-invocation: true
 ---
 
@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 Break a plan, spec, or conversation into a set of **tickets**: tracer-bullet vertical slices, each declaring the tickets that **block** it.
 
-The issue tracker and triage label vocabulary should have been provided to you. If not, tell the user to run `/setup-matt-pocock-skills`.
+The issue tracker and triage label vocabulary should have been provided to you. If not, tell the user to run `/setup-skills`.
 
 ## Process
 
@@ -37,7 +37,7 @@ Break the work into **tracer bullet** tickets.
 
 Give each ticket its **blocking edges**: the other tickets that must complete before it can start. A ticket with no blockers can start immediately.
 
-**Wide refactors are the exception to vertical slicing.** A **wide refactor** is one mechanical change (rename a column, retype a shared symbol) whose **blast radius** fans across the whole codebase, so a single edit breaks thousands of call sites at once and no vertical slice can land green. Don't force it into a tracer bullet; sequence it as **expand–contract**. First expand: add the new form beside the old so nothing breaks. Then migrate the call sites over in batches sized by blast radius (per package, per directory), each batch its own ticket blocked by the expand, keeping CI green batch to batch because the old form still exists. Finally contract: delete the old form once no caller remains, in a ticket blocked by every migrate batch. When even the batches can't stay green alone, keep the sequence but let them share an integration branch that all block a final integrate-and-verify ticket; green is promised only there.
+**Wide refactors are the exception to vertical slicing.** A **wide refactor** is one mechanical change (rename a column, retype a shared symbol) whose **blast radius** fans across the whole codebase, so a single edit breaks thousands of call sites at once and no vertical slice can land green. Don't force it into a tracer bullet; sequence it as **expand and contract**. First expand: add the new form beside the old so nothing breaks. Then migrate the call sites over in batches sized by blast radius (per package, per directory), each batch its own ticket blocked by the expand, keeping CI green batch to batch because the old form still exists. Finally contract: delete the old form once no caller remains, in a ticket blocked by every migrate batch. When even the batches can't stay green alone, keep the sequence but let them share an integration branch that all block a final integrate-and-verify ticket; green is promised only there.
 
 ### 4. Quiz the user
 
@@ -57,48 +57,93 @@ Iterate until the user approves the breakdown.
 
 ### 5. Publish the tickets to the configured tracker
 
-Publish the approved tickets. **How** depends on the tracker `/setup-matt-pocock-skills` configured; the tickets are the same either way, only the shape of the blocking edges changes:
+Publish approved tickets in dependency order (blockers first) so each ticket can reference existing blocker identifiers:
 
-- **Local files** → write one file per ticket under `.scratch/<feature-slug>/issues/<NN>-<slug>.md`, numbered from `01` in dependency order (blockers first). Each file's "Blocked by" lists the numbers/titles it depends on. Use the per-ticket file template below: one ticket per file, never a single combined file.
-- **A real issue tracker (GitHub, Linear, …)** → publish one issue per ticket in dependency order (blockers first) so each ticket's blocking edges can reference real identifiers. Use the platform's native blocking relationship where it has one; otherwise set each ticket's "Blocked by" to the blocking issues. If the source was an existing issue, make each ticket its sub-issue (tracker doc's operation). Apply the `ready-for-agent` triage label unless instructed otherwise; the tickets are agent-grabbable by construction.
+- **Local files:** write one file per ticket under `.scratch/<feature-slug>/issues/<NN>-<slug>.md`, numbered from `01`. Use relative markdown links to blockers (e.g. `[01-setup.md](./01-setup.md)`). Use `<local-ticket-template>` below. Never create a single combined tickets file.
+- **GitHub issues:** publish using the `gh` CLI and `<issue-template>` below:
+  1. Create the issue:
+     ```bash
+     gh issue create --title "<Title>" --body "<body>" --label "ready-for-agent"
+     ```
+  2. Link as sub-issue to parent:
+     ```bash
+     gh issue edit <parent-number> --add-sub-issue <child-number>
+     ```
+  3. Establish native blocking dependency:
+     ```bash
+     BLOCKER_ID=$(gh api repos/{owner}/{repo}/issues/<blocker-number> --jq .id)
+     gh api --method POST repos/{owner}/{repo}/issues/<child-number>/dependencies/blocked_by -F issue_id="$BLOCKER_ID"
+     ```
 
 Work the **frontier**: any ticket whose blockers are all done. For a purely linear chain that means top to bottom.
 
-Do NOT close or modify any parent issue.
+Do NOT close or modify the parent issue's state.
 
 <local-ticket-template>
 
 # <NN>: <Ticket title>
 
-**What to build:** the end-to-end behaviour this ticket makes work, from the user's perspective, not a layer-by-layer implementation list.
-
-**Blocked by:** the numbers/titles of the tickets that gate this one, or "None (can start immediately)".
-
 **Status:** ready-for-agent
+**Blocked by:** [01-slug.md](./01-slug.md) <!-- Relative markdown link to blocker, or "None (start immediately)" -->
+**Blocks:** [03-slug.md](./03-slug.md)
 
-- [ ] Acceptance criterion 1
-- [ ] Acceptance criterion 2
+## Context & Why
 
-</local-ticket-template>
-
-<issue-template>
-
-## Parent
-
-A reference to the parent issue on the tracker (if the source was an existing issue, otherwise omit this section).
+Part of [spec.md](../spec.md).
+<1-2 sentences on the user pain, intent, or architectural reason for this ticket.>
 
 ## What to build
 
-The end-to-end behaviour this ticket makes work, from the user's perspective, not layer-by-layer implementation.
+<End-to-end slice behavior from the caller/user perspective, not layer-by-layer notes.>
+
+## Scope boundaries
+
+- **In scope:** <Concrete boundaries of this tracer bullet>
+- **Out of scope (deferred):** <Intentional omissions left for downstream tickets>
+
+## Target seam & verification
+
+- **Testing seam:** <Public boundary to test against, e.g. service method or endpoint>
+- **Verification command:** `<Exact test command, e.g. pnpm test tests/...>`
 
 ## Acceptance criteria
 
 - [ ] Criterion 1
 - [ ] Criterion 2
+- [ ] Type checks and tests pass cleanly
+
+</local-ticket-template>
+
+<issue-template>
+
+## Context & Why
+
+Part of #<parent-number>.
+<1-2 sentences on the user pain, intent, or architectural reason for this ticket.>
+
+## What to build
+
+<End-to-end slice behavior from the caller/user perspective, not layer-by-layer notes.>
+
+## Scope boundaries
+
+- **In scope:** <Concrete boundaries of this tracer bullet>
+- **Out of scope (deferred):** <Intentional omissions left for downstream tickets>
+
+## Target seam & verification
+
+- **Testing seam:** <Public boundary to test against, e.g. service method or endpoint>
+- **Verification command:** `<Exact test command, e.g. pnpm test tests/...>`
+
+## Acceptance criteria
+
+- [ ] Criterion 1
+- [ ] Criterion 2
+- [ ] Type checks and tests pass cleanly
 
 ## Blocked by
 
-- A reference to each blocking ticket, or "None (can start immediately)". Omit this section when blockers were set as native edges.
+- #<blocker-number> (also established via native issue dependency)
 
 </issue-template>
 
