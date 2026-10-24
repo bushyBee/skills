@@ -1,5 +1,5 @@
 interface:
-  display_name: "Implement Spec"
-  short_description: "Implement the result of /to-spec and /to-tickets in code."
+  display_name: "Implement Ticket"
+  short_description: "Orchestrate ticket implementation across subagents with TDD, two-round review and fixing, and stacked PR creation."
 policy:
   allow_implicit_invocation: false
