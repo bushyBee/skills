@@ -39,7 +39,7 @@ Dispatch an **implementer subagent** with the ticket details, target branch, and
 
 1. **Invoke TDD skill**:
    - The subagent calls the `tdd` skill.
-   - Confirm public testing seams with the user before writing tests.
+   - Determine the public testing seams autonomously, selecting the cleanest testing boundary without interrupting the user.
    - Develop in vertical slices: write a red failing test first, write minimal implementation to turn it green, then verify.
 2. **Continuous verification**:
    - Run type checks and targeted tests during each slice cycle.
