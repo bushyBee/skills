@@ -23,7 +23,7 @@ Skills for daily software engineering workflows.
 #### User-Invoked
 Reachable when explicitly requested in conversation:
 
-- **[implement-ticket](./skills/engineering/implement-ticket/SKILL.md)**: Multi-agent orchestration to ingest a ticket, branch (including stacked PRs via gh stack), implement with TDD, run two rounds of review and fixing, and open a PR.
+- **[implement-ticket](./skills/engineering/implement-ticket/SKILL.md)**: Multi-agent orchestration to ingest a ticket, branch (including stacked PRs via gh stack), implement with TDD, commit, push, and open a PR.
 - **[implement](./skills/engineering/implement/SKILL.md)**: Build work described by a spec or ticket, driving TDD at agent-determined testing seams and closing out with code review.
 - **[implement-spec](./skills/engineering/implement-spec/SKILL.md)**: Implement an entire spec on an integration branch with concurrent implementer subagents across the task frontier.
 - **[grill-with-docs](./skills/engineering/grill-with-docs/SKILL.md)**: Interview session that sharpens ideas, aligns domain language, and records terminology in `GLOSSARY.md` and ADRs.
