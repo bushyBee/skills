@@ -60,6 +60,7 @@ General workflow and communication skills.
 - **[unslop](./skills/productivity/unslop/SKILL.md)**: Remove AI prose tells and fluff while preserving intended meaning and tone.
 - **[grill-me](./skills/productivity/grill-me/SKILL.md)**: Stateless grilling interview to stress-test plans, decisions, or ideas.
 - **[handoff](./skills/productivity/handoff/SKILL.md)**: Package conversation state into a portable summary for another session or collaborator.
+- **[scope-mvp](./skills/productivity/scope-mvp/SKILL.md)**: Cut an idea down to the smallest working MVP that tests its core promise, with must-have parts and clear acceptance criteria.
 - **[teach](./skills/productivity/teach/SKILL.md)**: Interactive teaching workspace for learning new concepts across sessions.
 - **[to-questionnaire](./skills/productivity/to-questionnaire/SKILL.md)**: Create targeted questionnaires for external stakeholders.
 - **[wait-what](./skills/productivity/wait-what/SKILL.md)**: Clarify confusing explanations in plain English using the project's glossary.

@@ -1,0 +1,5 @@
+interface:
+  display_name: "Scope MVP"
+  short_description: "Cut an idea to one testable MVP"
+policy:
+  allow_implicit_invocation: false

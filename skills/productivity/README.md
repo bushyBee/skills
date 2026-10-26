@@ -9,6 +9,7 @@ Reachable only when you type them (Claude Code: `disable-model-invocation: true`
 - **[unslop](./unslop/SKILL.md)**: Cut AI tells from writing while preserving meaning and intended tone.
 - **[grill-me](./grill-me/SKILL.md)**: Get relentlessly interviewed about a plan or design until every branch of the design tree is resolved.
 - **[handoff](./handoff/SKILL.md)**: Compact the current conversation into a handoff document so another agent can continue the work.
+- **[scope-mvp](./scope-mvp/SKILL.md)**: Cut an idea down to the smallest working MVP that tests its core promise, with must-have parts and clear acceptance criteria.
 - **[teach](./teach/SKILL.md)**: Teach the user a new skill or concept over multiple sessions, using the current directory as a stateful teaching workspace.
 - **[to-questionnaire](./to-questionnaire/SKILL.md)**: Turn a decision you can't answer alone into a Markdown questionnaire for the one person who can (filled in async, or together over a meeting).
 - **[wait-what](./wait-what/SKILL.md)**: Fire this the moment a message doesn't land. The agent re-pitches it with the context you're missing, in plain English, using your `GLOSSARY.md` vocabulary.
